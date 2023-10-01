@@ -1,0 +1,1 @@
+exec updateStock 'G0003','WH'

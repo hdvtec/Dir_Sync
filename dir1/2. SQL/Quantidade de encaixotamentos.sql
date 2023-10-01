@@ -1,0 +1,3 @@
+SELECT        COUNT(DATA_NO) AS Expr1
+FROM            GPROLOTDF
+WHERE        (ITEM_LOT_NO LIKE 'S210201%')
