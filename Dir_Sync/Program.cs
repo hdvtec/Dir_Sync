@@ -142,7 +142,7 @@ namespace Dir_Sync
                 if (!Directory.Exists(_destinationDirectory))
                 {
                     Directory.CreateDirectory(_destinationDirectory);
-                    if (Directory.Exists(_destinationDirectory))
+                    if (!Directory.Exists(_destinationDirectory))
                         throw new Exception("Cannot create destination Directory.");
                 }
 
