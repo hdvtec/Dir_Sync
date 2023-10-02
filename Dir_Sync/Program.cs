@@ -108,7 +108,7 @@ namespace Dir_Sync
                 if(!Directory.Exists(Path.GetDirectoryName(_logFile)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(_logFile));
-                    if (Directory.Exists(Path.GetDirectoryName(_logFile)))
+                    if (!Directory.Exists(Path.GetDirectoryName(_logFile)))
                         throw new Exception("Cannot create log Directory.");
                 }
 
