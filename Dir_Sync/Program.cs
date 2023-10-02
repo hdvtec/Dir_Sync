@@ -74,13 +74,15 @@ namespace Dir_Sync
         /// Validate user inputs
         /// </summary>
         /// <param name="userInput">Arguments provided by the user</param>
-        /// <returns></returns>
+        /// <returns>True if arguments are valid.</returns>
         private static bool ValidateUserInputs(string[] userInput)
         {
-            //Validate parameter quantity and Log File
+            //--- Validate parameter quantity, Repetition Period and Log File
             try
             {
                 Console.WriteLine(DateTime.Now.ToString() + " - Validating number of parameters\n");
+
+                //--- Check Number of provided arguments
                 if (!(userInput.Length == 4))
                     throw new Exception("Invalid number of parameters.");
 
@@ -88,11 +90,16 @@ namespace Dir_Sync
                 _originDirectory = userInput[0];
                 _destinationDirectory = userInput[1];
                 _logFile = userInput[2];
+
+                //--- Validate Repetition Period
+                Console.WriteLine(DateTime.Now.ToString() + " - Validating Repetition Period\n");
+
                 if (!int.TryParse(userInput[3], out _repetitionPeriod))
                     throw new Exception("Invalid repetition period.");
                 if(!(_repetitionPeriod > 0))
                     throw new Exception("Repetition period has to be higher than 0.");
 
+                //--- Validate Log File
                 Console.WriteLine(DateTime.Now.ToString() + " - Validating LogFile\n");
 
                 if (!ValidateDirectory(_logFile))
@@ -112,16 +119,22 @@ namespace Dir_Sync
                 return false;
             }
 
-            //Validate Origin and Destination directories
+            //--- Validate Origin and Destination directories
             try
             {
+                //--- Validate Origin directory
+                LogEvent("Validating origin directory.", _logFile);
+
                 if (!ValidateDirectory(_originDirectory))
                     throw new Exception("Invalid origin directory.");
 
                 if (!Directory.Exists(_originDirectory))
                     throw new Exception("Origin directory not found.");
 
-                LogEvent(DateTime.Now.ToString() + " - Origin directory verified.", _logFile);
+                LogEvent("Origin directory verified.", _logFile);
+
+                //--- Validate Destination directory
+                LogEvent("Validating destination directory.", _logFile);
 
                 if (!ValidateDirectory(_destinationDirectory))
                     throw new Exception("Invalid destination directory.");
@@ -133,15 +146,16 @@ namespace Dir_Sync
                         throw new Exception("Cannot create destination Directory.");
                 }
 
-                LogEvent(DateTime.Now.ToString() + " - Destination directory verified.", _logFile);
+                LogEvent("Destination directory verified.", _logFile);
 
             }
             catch (Exception ex)
             {
-                LogEvent(" Validation failed : " + ex.Message, _logFile);
+                LogEvent("Validation failed : " + ex.Message, _logFile);
                 throw;
             }
 
+            //--- If all verification pass return true
             return true;
         }
 
@@ -193,7 +207,6 @@ namespace Dir_Sync
                 var dirsToAdd = originDirContents.dirs.Where(x => !destinationDirContents.dirs.Contains(x));
                 var filesToRemove = destinationDirContents.files.Where(x => !originDirContents.files.Contains(x));
                 var filesToAdd = originDirContents.files.Where(x => !destinationDirContents.files.Contains(x));
-                var filesToCompare = originDirContents.files.Where(x => destinationDirContents.files.Contains(x));
 
                 //--- Remove Files
                 foreach (var fileToRemove in filesToRemove)
@@ -296,9 +309,7 @@ namespace Dir_Sync
         /// </returns>
         private static string[] AddElementAtBegin(string elementToAdd, string[] originalArray)
         {
-            int newLength = originalArray.Length + 1;
-
-            string[] result = new string[newLength];
+            string[] result = new string[originalArray.Length + 1];
 
             result[0] = elementToAdd;
             
@@ -317,7 +328,7 @@ namespace Dir_Sync
         {
             Console.WriteLine(logText);
             using (StreamWriter sw = new StreamWriter(logFile, true))
-                sw.WriteLine(DateTime.Now.ToString() + " - " + logText);
+                sw.WriteLine(logText);
         }
 
         /// <summary>
